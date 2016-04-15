@@ -3,4 +3,7 @@
 
     <string name="menu_list_task">任务列表</string>
     <string name="menu_statistics">统计</string>
+
+    <string name="no_tasks">没有短信发送计划</string>
+    <string name="load_error">加载失败</string>
 </resources>

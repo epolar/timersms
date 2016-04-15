@@ -17,6 +17,9 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import xyz.eraise.timersms.R;
+import xyz.eraise.timersms.data.source.SMSRepository;
+import xyz.eraise.timersms.data.source.local.LocalTasksDataSource;
+import xyz.eraise.timersms.utils.ActivityUtils;
 
 /**
  * 创建日期： 2016/4/14.
@@ -54,6 +57,15 @@ public class TasksActivity extends AppCompatActivity {
             setupNavView();
         }
 
+        // 把 Fragment 添加到界面上
+        TasksFragment _tasksFragment =
+                (TasksFragment) getSupportFragmentManager().findFragmentById(R.id.content_frame);
+        if (null == _tasksFragment) {
+            _tasksFragment = new TasksFragment();
+            ActivityUtils.addFragmentToActivity(getSupportFragmentManager(), _tasksFragment, R.id.content_frame);
+        }
+
+        _tasksFragment.setPresenter(new TasksPresenter(_tasksFragment, new SMSRepository(new LocalTasksDataSource(getApplicationContext()))));
 
     }
 

@@ -12,4 +12,6 @@ public interface IBasePresenter {
 
     void pause();
 
+    void destory();
+
 }

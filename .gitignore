@@ -30,3 +30,10 @@ proguard/
 
 # Android Studio captures folder
 captures/
+
+.idea/
+.idea
+idea/
+idea
+
+timersms.iml
