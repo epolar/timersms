@@ -9,4 +9,9 @@ public class ContactInfo {
     public String phoneNumber;
     public boolean isSelected;
 
+    public ContactInfo (String contactName, String phoneNumber) {
+        this.contactName = contactName;
+        this.phoneNumber = phoneNumber;
+    }
+
 }

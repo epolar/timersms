@@ -3,6 +3,7 @@ package xyz.eraise.timersms.addedittask;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -25,12 +26,15 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import xyz.eraise.timersms.R;
+import xyz.eraise.timersms.contacts.ContactsActivity;
 import xyz.eraise.timersms.data.pojo.SMSInfo;
 
 /**
  * 创建日期： 2016/4/18.
  */
 public class AddEditTaskFragment extends Fragment implements AddEditTaskContract.View {
+
+    private static final int REQUEST_CONTACTS = 1001;
 
     @Bind(R.id.et_target)
     AutoCompleteTextView etTarget;
@@ -149,6 +153,7 @@ public class AddEditTaskFragment extends Fragment implements AddEditTaskContract
             selectedTime();
         } else if (v == btnContacts) {
             // 选择联系人
+            startActivityForResult(new Intent(getActivity(), ContactsActivity.class), REQUEST_CONTACTS);
         } else if (v == btnSave) {
             // 保存
         }

@@ -1,6 +1,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="xyz.eraise.timersms">
 
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -21,6 +24,7 @@
         </activity>
 
         <activity android:name=".addedittask.AddEditTaskActivity" />
+        <activity android:name=".contacts.ContactsActivity"/>
 
     </application>
 

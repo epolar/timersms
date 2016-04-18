@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
 import xyz.eraise.timersms.R;
+import xyz.eraise.timersms.utils.ActivityUtils;
 
 /**
  * 创建日期： 2016/4/18.
@@ -24,6 +25,20 @@ public class ContactsActivity extends AppCompatActivity {
         _ab.setDisplayShowHomeEnabled(true);
         _ab.setDisplayHomeAsUpEnabled(true);
         _ab.setTitle(R.string.select_receive_contact);
+
+        ContactsFragment _contactsFragment = (ContactsFragment) getSupportFragmentManager().findFragmentById(R.id.content_frame);
+        if (null == _contactsFragment) {
+            _contactsFragment = new ContactsFragment();
+            ActivityUtils.addFragmentToActivity(getSupportFragmentManager(), _contactsFragment, R.id.content_frame);
+        }
+
+        ContactsPresenter _presenter = new ContactsPresenter(getApplicationContext(), _contactsFragment);
+        _contactsFragment.setPresenter(_presenter);
     }
 
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
+    }
 }
