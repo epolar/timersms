@@ -1,5 +1,6 @@
 package xyz.eraise.timersms.tasks;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
@@ -17,6 +18,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import xyz.eraise.timersms.R;
+import xyz.eraise.timersms.addedittask.AddEditTaskActivity;
 import xyz.eraise.timersms.data.source.SMSRepository;
 import xyz.eraise.timersms.data.source.local.LocalTasksDataSource;
 import xyz.eraise.timersms.utils.ActivityUtils;
@@ -101,5 +103,6 @@ public class TasksActivity extends AppCompatActivity {
 
     @OnClick(R.id.btn_add_task)
     public void onClick() {
+        startActivity(new Intent(this, AddEditTaskActivity.class));
     }
 }

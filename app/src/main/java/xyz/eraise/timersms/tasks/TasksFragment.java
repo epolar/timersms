@@ -9,13 +9,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import me.zhanghai.android.materialprogressbar.MaterialProgressBar;
 import xyz.eraise.timersms.R;
 import xyz.eraise.timersms.data.pojo.SMSInfo;
 
@@ -33,7 +33,7 @@ public class TasksFragment extends Fragment implements TasksContract.View {
     @Bind(R.id.container_empty)
     LinearLayout containerEmpty;
     @Bind(R.id.pb)
-    ProgressBar pb;
+    MaterialProgressBar pb;
 
     private TasksContract.Persenter mPresenter;
 
@@ -65,8 +65,9 @@ public class TasksFragment extends Fragment implements TasksContract.View {
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
+    public void onDestroyView() {
+        super.onDestroyView();
+        ButterKnife.unbind(this);
         mPresenter.destory();
     }
 
@@ -125,9 +126,4 @@ public class TasksFragment extends Fragment implements TasksContract.View {
         containerEmpty.setVisibility(View.VISIBLE);
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        ButterKnife.unbind(this);
-    }
 }

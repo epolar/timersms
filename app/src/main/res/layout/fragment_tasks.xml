@@ -9,7 +9,7 @@
         android:layout_height="match_parent"
         />
 
-    <ProgressBar
+    <me.zhanghai.android.materialprogressbar.MaterialProgressBar
         style="@style/Base.Widget.AppCompat.ProgressBar"
         android:id="@+id/pb"
         android:layout_width="wrap_content"
@@ -17,31 +17,6 @@
         android:layout_centerInParent="true"
         />
 
-    <LinearLayout
-        android:id="@+id/container_empty"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:orientation="vertical"
-        android:visibility="gone"
-        >
-
-        <ImageView
-            android:id="@+id/iv_icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_empty"
-            android:tint="@color/colorNoticeLabel"
-            />
-
-        <TextView
-            android:id="@+id/tv_emtpy"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:textColor="@color/colorNoticeLabel"
-            />
-
-    </LinearLayout>
+    <include layout="@layout/layout_empty" />
 
 </RelativeLayout>
