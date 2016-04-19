@@ -1,5 +1,6 @@
 package xyz.eraise.timersms.contacts;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import xyz.eraise.timersms.IBasePresenter;
@@ -16,6 +17,10 @@ public interface ContactsContract {
         void showContacts(List<ContactInfo> infos);
 
         List<ContactInfo> getContactInfos();
+
+        void finishSelected(ArrayList<ContactInfo> selectedInfos);
+
+        void setLoadIndicator(boolean show);
 
     }
 

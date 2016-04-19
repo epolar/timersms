@@ -8,6 +8,9 @@ import android.support.v7.widget.Toolbar;
 
 import butterknife.ButterKnife;
 import xyz.eraise.timersms.R;
+import xyz.eraise.timersms.data.source.ContactsDataSource;
+import xyz.eraise.timersms.data.source.SMSRepository;
+import xyz.eraise.timersms.data.source.local.LocalTasksDataSource;
 import xyz.eraise.timersms.utils.ActivityUtils;
 
 /**
@@ -37,16 +40,17 @@ public class AddEditTaskActivity extends AppCompatActivity {
             ActivityUtils.addFragmentToActivity(getSupportFragmentManager(), _fragment, R.id.content_frame);
         }
 
+        long smsId = -1;
         if (getIntent().hasExtra("smsId")) {
-            Bundle _bundle = new Bundle(1);
-            _bundle.putLong("smsId", getIntent().getLongExtra("smsId", 0));
-            _fragment.setArguments(_bundle);
+            smsId = getIntent().getIntExtra("smsId", -1);
             _ab.setTitle(R.string.edit_sms_task);
         } else {
             _ab.setTitle(R.string.add_sms_task);
         }
 
-        AddEditTaskPresenter _presenter = new AddEditTaskPresenter(_fragment);
+        SMSRepository _smsrepository = new SMSRepository(new LocalTasksDataSource(this));
+        ContactsDataSource _contactsDataSource = new ContactsDataSource();
+        AddEditTaskPresenter _presenter = new AddEditTaskPresenter(getApplicationContext(), _fragment, smsId, _smsrepository, _contactsDataSource);
         _fragment.setPresenter(_presenter);
     }
 

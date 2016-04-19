@@ -36,6 +36,7 @@ public class TasksFragment extends Fragment implements TasksContract.View {
     MaterialProgressBar pb;
 
     private TasksContract.Persenter mPresenter;
+    private TasksAdapter mAdapter;
 
     @Nullable
     @Override
@@ -43,6 +44,8 @@ public class TasksFragment extends Fragment implements TasksContract.View {
         super.onCreateView(inflater, container, savedInstanceState);
         View _rootView = inflater.inflate(R.layout.fragment_tasks, container, false);
         ButterKnife.bind(this, _rootView);
+        mAdapter = new TasksAdapter(getActivity());
+        lvContent.setAdapter(mAdapter);
         return _rootView;
     }
 
@@ -88,17 +91,26 @@ public class TasksFragment extends Fragment implements TasksContract.View {
 
     @Override
     public void showData(List<SMSInfo> data, boolean isRefresh) {
-
+        if (isRefresh)
+            mAdapter.clear();
+        mAdapter.addAll(data);
+        if (isRefresh) {
+            mAdapter.notifyDataSetInvalidated();
+        } else {
+            mAdapter.notifyDataSetChanged();
+        }
     }
 
     @Override
     public void addShowSMS(SMSInfo sms) {
-
+        mAdapter.addSMSInfo(sms);
+        mAdapter.notifyDataSetChanged();
     }
 
     @Override
     public void removeShowSMS(SMSInfo sms) {
-
+        mAdapter.removeSMSInfo(sms);
+        mAdapter.notifyDataSetChanged();
     }
 
     @Override

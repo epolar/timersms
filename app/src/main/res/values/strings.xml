@@ -14,4 +14,8 @@
     <string name="msg_content">短信内容</string>
     <string name="done">完成</string>
     <string name="select_receive_contact">选择收件人</string>
+    <string name="time_need_after_now">请选择一个未来的时间</string>
+    <string name="save_failed">保存失败</string>
+    <string name="delete_failed">删除失败</string>
+    <string name="get_sms_failed">获取短信计划失败</string>
 </resources>

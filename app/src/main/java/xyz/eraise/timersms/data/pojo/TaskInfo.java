@@ -20,7 +20,7 @@ public class TaskInfo {
      * 短信消息
      */
     @Mapping(Relation.ManyToOne)
-    public TaskInfo sms;
+    public SMSInfo sms;
 
     /**
      * 短信接收者的手机信息
@@ -32,4 +32,10 @@ public class TaskInfo {
      */
     public boolean isSended;
 
+    public TaskInfo(){}
+
+    public TaskInfo(SMSInfo sms, String phoneNumber) {
+        this.sms = sms;
+        this.phoneNumber = phoneNumber;
+    }
 }

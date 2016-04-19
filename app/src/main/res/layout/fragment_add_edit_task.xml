@@ -18,7 +18,7 @@
             android:layout_marginTop="20dp"
             >
 
-            <AutoCompleteTextView
+            <com.android.ex.chips.RecipientEditTextView
                 android:id="@+id/et_target"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

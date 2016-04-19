@@ -60,6 +60,7 @@ public class TasksPresenter implements TasksContract.Persenter {
                     mView.showEmpty();
                 } else {
                     mView.showData(tasks, true);
+                    mView.setLoadingIndicator(false);
                 }
             }
 

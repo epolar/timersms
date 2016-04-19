@@ -45,4 +45,13 @@ public class SMSInfo {
     @MapCollection(ArrayList.class)
     public List<TaskInfo> tasks;
 
+    @Override
+    public boolean equals(Object o) {
+        if (o instanceof SMSInfo) {
+            return ((SMSInfo)o).id == this.id;
+        } else {
+            return false;
+        }
+    }
+
 }

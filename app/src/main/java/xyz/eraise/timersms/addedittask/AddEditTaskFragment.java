@@ -12,32 +12,40 @@ import android.support.v7.widget.AppCompatButton;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AutoCompleteTextView;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.MultiAutoCompleteTextView;
 import android.widget.TimePicker;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.android.ex.chips.BaseRecipientAdapter;
+import com.android.ex.chips.RecipientEditTextView;
+import com.android.ex.chips.recipientchip.DrawableRecipientChip;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import xyz.eraise.timersms.R;
 import xyz.eraise.timersms.contacts.ContactsActivity;
+import xyz.eraise.timersms.data.pojo.ContactInfo;
 import xyz.eraise.timersms.data.pojo.SMSInfo;
+import xyz.eraise.timersms.data.pojo.TaskInfo;
+import xyz.eraise.timersms.utils.ELog;
 
 /**
  * 创建日期： 2016/4/18.
  */
 public class AddEditTaskFragment extends Fragment implements AddEditTaskContract.View {
 
-    private static final int REQUEST_CONTACTS = 1001;
+    private final ELog log = new ELog("AddEditTaskFragment");
 
     @Bind(R.id.et_target)
-    AutoCompleteTextView etTarget;
+    RecipientEditTextView etTarget;
     @Bind(R.id.btn_date)
     AppCompatButton btnDate;
     @Bind(R.id.btn_time)
@@ -59,6 +67,14 @@ public class AddEditTaskFragment extends Fragment implements AddEditTaskContract
 
     protected AddEditTaskContract.Presenter mPresenter;
 
+    private SMSInfo mSMSInfo;
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        mPresenter.onActivityResult(requestCode, resultCode, data);
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -66,17 +82,44 @@ public class AddEditTaskFragment extends Fragment implements AddEditTaskContract
         ButterKnife.bind(this, _rootView);
 
         Calendar _calendar = Calendar.getInstance();
-        dayOfMonth = _calendar.get(Calendar.DAY_OF_MONTH);
-        month =_calendar.get(Calendar.MONTH);
-        year = _calendar.get(Calendar.YEAR);
-        btnDate.setText(year + " - " + (month + 1) + " - " + dayOfMonth);
+        initDate(_calendar);
+
+        etTarget.setTokenizer(new MultiAutoCompleteTextView.CommaTokenizer());
+        etTarget.setAdapter(new BaseRecipientAdapter(BaseRecipientAdapter.QUERY_TYPE_PHONE, getActivity()));
+        etTarget.setOnFocusListShrinkRecipients(true);
 
         return _rootView;
     }
 
-    @Override
-    public void showData(SMSInfo info) {
+    private void initDate(Calendar calendar) {
+        dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
+        month =calendar.get(Calendar.MONTH);
+        year = calendar.get(Calendar.YEAR);
+        btnDate.setText(year + " - " + (month + 1) + " - " + dayOfMonth);
+    }
 
+    private void initTime(Calendar calendar) {
+        hourOfDay = calendar.get(Calendar.HOUR_OF_DAY);
+        minute = calendar.get(Calendar.MINUTE);
+        btnTime.setText(hourOfDay + " : " + minute);
+    }
+
+    @Override
+    public void showContants(List<ContactInfo> contactInfos) {
+        etTarget.setText(null);
+        for (ContactInfo contactInfo : contactInfos) {
+            etTarget.submitItem(contactInfo.contactName, contactInfo.phoneNumber, contactInfo.photo);
+        }
+    }
+
+    @Override
+    public void showSMSData(SMSInfo info) {
+        this.mSMSInfo = info;
+        Calendar _calendar = Calendar.getInstance();
+        _calendar.setTimeInMillis(info.scheduleTime);
+        initDate(_calendar);
+        initTime(_calendar);
+        etMsgContent.setText(info.content);
     }
 
     @Override
@@ -107,7 +150,7 @@ public class AddEditTaskFragment extends Fragment implements AddEditTaskContract
     }
 
     @Override
-    public void prompt(String msg) {
+    public void prompt(int msg) {
         if (null != mDialog && mDialog.isShowing()) {
             mDialog.dismiss();
             mDialog = null;
@@ -153,10 +196,31 @@ public class AddEditTaskFragment extends Fragment implements AddEditTaskContract
             selectedTime();
         } else if (v == btnContacts) {
             // 选择联系人
-            startActivityForResult(new Intent(getActivity(), ContactsActivity.class), REQUEST_CONTACTS);
+            startActivityForResult(new Intent(getActivity(), ContactsActivity.class), AddEditTaskContract.REQUEST_CONTACTS);
         } else if (v == btnSave) {
             // 保存
+            mPresenter.saveTask(genSMSInfo());
         }
+    }
+
+    /**
+     * 生成或重新设置 mSMSInfo
+     * @return
+     */
+    public SMSInfo genSMSInfo() {
+        if (null == mSMSInfo) {
+            mSMSInfo = new SMSInfo();
+        }
+        mSMSInfo.content = etMsgContent.getText().toString();
+        mSMSInfo.tasks = new ArrayList<>();
+        DrawableRecipientChip[] _recipients = etTarget.getRecipients();
+        for (DrawableRecipientChip _recipient : _recipients) {
+            mSMSInfo.tasks.add(new TaskInfo(mSMSInfo, _recipient.getValue().toString()));
+        }
+        Calendar _calendar = Calendar.getInstance();
+        _calendar.set(year, month, dayOfMonth, hourOfDay, minute);
+        mSMSInfo.scheduleTime = _calendar.getTimeInMillis();
+        return mSMSInfo;
     }
 
     private void selectedTime() {
