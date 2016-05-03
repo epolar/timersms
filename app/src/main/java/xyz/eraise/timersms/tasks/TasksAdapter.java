@@ -77,6 +77,7 @@ public class TasksAdapter extends BaseAdapter {
         } else {
             _holder = (SMSViewHolder) view.getTag();
         }
+        _holder.tvTarget.setText(null);
         for (TaskInfo _target : _info.tasks) {
             _holder.tvTarget.append(_target.phoneNumber + ";");
         }

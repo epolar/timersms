@@ -3,6 +3,7 @@
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.SEND_SMS" />
 
     <application
         android:allowBackup="true"
@@ -26,6 +27,12 @@
         <activity android:name=".addedittask.AddEditTaskActivity" />
         <activity android:name=".contacts.ContactsActivity"/>
 
+        <service android:name=".services.SendSMSService">
+            <intent-filter>
+                <action android:name="xyz.eraise.timersms.ACTION_SEND_SMS"/>
+                <action android:name="xyz.eraise.timersms.ACTION_CHANGE_TASK_STATE"/>
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>

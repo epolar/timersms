@@ -5,6 +5,9 @@ import android.support.annotation.NonNull;
 
 import com.litesuits.orm.LiteOrm;
 import com.litesuits.orm.db.assit.QueryBuilder;
+import com.litesuits.orm.db.assit.WhereBuilder;
+import com.litesuits.orm.db.model.ColumnsValue;
+import com.litesuits.orm.db.model.ConflictAlgorithm;
 
 import java.util.ArrayList;
 
@@ -38,7 +41,7 @@ public class LocalTasksDataSource implements TasksDataSource {
             @Override
             public void call(Subscriber<? super ArrayList<SMSInfo>> subscriber) {
                 try {
-                    ArrayList<SMSInfo> result = mLiteOrm.query(QueryBuilder.create(SMSInfo.class).whereEquals("sendState", sended));
+                    ArrayList<SMSInfo> result = mLiteOrm.query(QueryBuilder.create(SMSInfo.class).whereEquals("sendState", sended).appendOrderDescBy("id"));
                     subscriber.onNext(result);
                 } catch (Exception e) {
                     mLog.w(e);
@@ -122,7 +125,7 @@ public class LocalTasksDataSource implements TasksDataSource {
     public void completeTaskInfo(@NonNull TaskInfo task, @NonNull ModifyTaskCallback callback) {
         final TaskInfo _task = task;
         final ModifyTaskCallback _callback = callback;
-        _task.isSended = true;
+        _task.state = TaskInfo.STATE_SENT;
         CommonUtils.asyncTask(new Observable.OnSubscribe<ModifyTaskCallback>() {
             @Override
             public void call(Subscriber<? super ModifyTaskCallback> subscriber) {
@@ -160,6 +163,34 @@ public class LocalTasksDataSource implements TasksDataSource {
                 }
             }
         }).subscribe(new OnFinishAction(), new DataNotAvailableAction(callback));
+    }
+
+    @Override
+    public void updateSMSState(int smsId, boolean isSend) {
+        final int fSMSId = smsId;
+        final boolean fIsSend = isSend;
+        new Thread(){
+            @Override
+            public void run() {
+                WhereBuilder wb = WhereBuilder.create(SMSInfo.class, "id==?", new String[]{String.valueOf(fSMSId)});
+                ColumnsValue cv = new ColumnsValue(new String[]{"sendState"}, new String[]{String.valueOf(fIsSend)});
+                mLiteOrm.update(wb, cv, ConflictAlgorithm.Replace);
+            }
+        }.start();
+    }
+
+    @Override
+    public void updateTaskState(int taskId, int state) {
+        final int fSMSId = taskId;
+        final int fState = state;
+        new Thread(){
+            @Override
+            public void run() {
+                WhereBuilder wb = WhereBuilder.create(TaskInfo.class, "id==?", new String[]{String.valueOf(fSMSId)});
+                ColumnsValue cv = new ColumnsValue(new String[]{"state"}, new String[]{String.valueOf(fState)});
+                mLiteOrm.update(wb, cv, ConflictAlgorithm.Replace);
+            }
+        }.start();
     }
 
     static class OnFinishAction implements Action1<ModifyTaskCallback> {

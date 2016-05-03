@@ -43,7 +43,7 @@ public interface TasksDataSource {
      */
     void getScheduleSMSTasks(@NonNull LoadTasksCallback callback);
 
-    void getSMS(@NonNull long taskId, @NonNull GetTaskCallback callback);
+    void getSMS(@NonNull long smsId, @NonNull GetTaskCallback callback);
 
     void saveSMS(@NonNull SMSInfo task, @NonNull ModifyTaskCallback callback);
 
@@ -52,5 +52,9 @@ public interface TasksDataSource {
     void completeTaskInfo(@NonNull TaskInfo task, @NonNull ModifyTaskCallback callback);
 
     void deleteSMS(@NonNull SMSInfo task, @NonNull ModifyTaskCallback callback);
+
+    void updateTaskState(int taskId, int state);
+
+    void updateSMSState(int smsId, boolean isSend);
 
 }

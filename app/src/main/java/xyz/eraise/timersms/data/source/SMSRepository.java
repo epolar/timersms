@@ -1,5 +1,6 @@
 package xyz.eraise.timersms.data.source;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 
 import xyz.eraise.timersms.data.pojo.SMSInfo;
@@ -15,6 +16,10 @@ import xyz.eraise.timersms.data.source.local.LocalTasksDataSource;
 public class SMSRepository implements TasksDataSource {
 
     private TasksDataSource mLocalTasksDataSource;
+
+    public static final SMSRepository createDefaultRepository(@NonNull Context context) {
+        return new SMSRepository(new LocalTasksDataSource(context));
+    }
 
     public SMSRepository(@NonNull LocalTasksDataSource localTasksDataSource) {
         mLocalTasksDataSource = localTasksDataSource;
@@ -53,5 +58,15 @@ public class SMSRepository implements TasksDataSource {
     @Override
     public void deleteSMS(@NonNull SMSInfo task, @NonNull ModifyTaskCallback callback) {
         mLocalTasksDataSource.deleteSMS(task, callback);
+    }
+
+    @Override
+    public void updateSMSState(int smsId, boolean isSend) {
+        mLocalTasksDataSource.updateSMSState(smsId, isSend);
+    }
+
+    @Override
+    public void updateTaskState(int taskId, int state) {
+        mLocalTasksDataSource.updateTaskState(taskId, state);
     }
 }

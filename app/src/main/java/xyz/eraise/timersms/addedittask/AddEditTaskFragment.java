@@ -157,6 +157,7 @@ public class AddEditTaskFragment extends Fragment implements AddEditTaskContract
         }
         new MaterialDialog.Builder(getActivity())
                 .content(msg)
+                .positiveText(R.string.ok)
                 .build()
                 .show();
     }

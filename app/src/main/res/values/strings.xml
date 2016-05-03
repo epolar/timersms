@@ -18,4 +18,5 @@
     <string name="save_failed">保存失败</string>
     <string name="delete_failed">删除失败</string>
     <string name="get_sms_failed">获取短信计划失败</string>
+    <string name="ok">确定</string>
 </resources>

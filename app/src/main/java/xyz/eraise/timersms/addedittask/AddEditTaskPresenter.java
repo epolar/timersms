@@ -17,6 +17,7 @@ import xyz.eraise.timersms.data.pojo.SMSInfo;
 import xyz.eraise.timersms.data.pojo.TaskInfo;
 import xyz.eraise.timersms.data.source.ContactsDataSource;
 import xyz.eraise.timersms.data.source.TasksDataSource;
+import xyz.eraise.timersms.utils.SMSAlarmUtils;
 
 /**
  * 创建日期： 2016/4/18.
@@ -54,6 +55,7 @@ public class AddEditTaskPresenter implements AddEditTaskContract.Presenter {
 
     @Override
     public void saveTask(SMSInfo info) {
+        final SMSInfo fInfo = info;
         if (info.addTime == 0) {
             info.addTime = System.currentTimeMillis();
         }
@@ -65,6 +67,11 @@ public class AddEditTaskPresenter implements AddEditTaskContract.Presenter {
         mTasksDataSource.saveSMS(info, new TasksDataSource.ModifyTaskCallback() {
             @Override
             public void onFinish() {
+                try {
+                    SMSAlarmUtils.scheduleSMSAlarm(context, fInfo);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 mView.saveFinish();
             }
 
@@ -77,9 +84,11 @@ public class AddEditTaskPresenter implements AddEditTaskContract.Presenter {
 
     @Override
     public void deleteTask(SMSInfo info) {
+        final SMSInfo fInfo = info;
         mTasksDataSource.deleteSMS(info, new TasksDataSource.ModifyTaskCallback() {
             @Override
             public void onFinish() {
+                SMSAlarmUtils.cancelScheduleSMS(context, fInfo);
                 mView.deleteFinish();
             }
 
@@ -145,4 +154,5 @@ public class AddEditTaskPresenter implements AddEditTaskContract.Presenter {
     public void destory() {
         context = null;
     }
+
 }
