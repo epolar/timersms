@@ -125,7 +125,7 @@ public class TasksFragment extends Fragment implements TasksContract.View {
     @Override
     public void showEmpty() {
         pb.setVisibility(View.GONE);
-        tvEmtpy.setText(R.string.load_error);
+        tvEmtpy.setText(R.string.no_tasks);
         lvContent.setVisibility(View.GONE);
         containerEmpty.setVisibility(View.VISIBLE);
     }
@@ -133,7 +133,7 @@ public class TasksFragment extends Fragment implements TasksContract.View {
     @Override
     public void showLoadingTasksError() {
         pb.setVisibility(View.GONE);
-        tvEmtpy.setText(R.string.no_tasks);
+        tvEmtpy.setText(R.string.load_error);
         lvContent.setVisibility(View.GONE);
         containerEmpty.setVisibility(View.VISIBLE);
     }
